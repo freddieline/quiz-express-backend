@@ -1,13 +1,16 @@
 
 import express, { Application, Request, Response, NextFunction } from 'express';
 import dotenv from 'dotenv';
-import bodyParser from 'body-parser';
+import corsMiddleware from './middleware/corsMiddleware';
 import routes from './routes';
 
 dotenv.config();
 
 const app: Application = express();
 const PORT = process.env.PORT || 3000;
+
+// add middleware
+app.use(corsMiddleware);
 
 // Routes
 app.use('/api', routes);

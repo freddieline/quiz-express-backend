@@ -5,10 +5,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const dotenv_1 = __importDefault(require("dotenv"));
+const corsMiddleware_1 = __importDefault(require("./middleware/corsMiddleware"));
 const routes_1 = __importDefault(require("./routes"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 const PORT = process.env.PORT || 3000;
+// add middleware
+app.use(corsMiddleware_1.default);
 // Routes
 app.use('/api', routes_1.default);
 // Error handling middleware
