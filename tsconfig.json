@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",                          // Target ECMAScript version
+    "module": "commonjs",                        // Use CommonJS for Node.js
+    "outDir": "dist",                          // Output directory for compiled JS
+    "rootDir": "src",                          // Source directory for TypeScript files
+    "strict": true,                              // Enable strict type checking
+    "esModuleInterop": true,                     // Enables ES6 module import/export interoperability
+    "skipLibCheck": true,                        // Skip type checking of declaration files
+    "forceConsistentCasingInFileNames": true     // Enforce case-sensitive imports
+  },
+  "include": ["src/**/*"],                            // Include all files from the src folder
+  "exclude": ["node_modules", "dist"]            // Exclude node_modules and dist
+}
+
