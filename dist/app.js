@@ -9,7 +9,7 @@ const corsMiddleware_1 = __importDefault(require("./middleware/corsMiddleware"))
 const routes_1 = __importDefault(require("./routes"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 // add middleware
 app.use(corsMiddleware_1.default);
 // Routes
