@@ -14,7 +14,7 @@ const getAllQuizQuestions = async (req: Request, res: Response): Promise<Respons
 
 
     let query = `
-    SELECT qq.question, qq.answer, t.name, qq.additional_info 
+    SELECT qq.question, qq.answer_1, qq.answer_2, qq.answer_3, qq.answer_4, qq.correct_answer, t.name, qq.additional_info 
     FROM quiz_questions AS qq 
     INNER JOIN topics AS t 
     ON qq.topic_id = t.id
