@@ -9,13 +9,13 @@ const getAllQuizQuestions = async (req, res) => {
     try {
         const { topic } = req.query;
         let query = `
-    SELECT qq.question, qq.answer_1, qq.answer_2, qq.answer_3, qq.answer_4, qq.correct_answer, t.name, qq.additional_info 
+    SELECT qq.question, qq.answer_1, qq.answer_2, qq.answer_3, qq.answer_4, qq.correct_answer, q.name AS quiz_name, qq.additional_info 
     FROM quiz_questions AS qq 
-    INNER JOIN topics AS t 
-    ON qq.topic_id = t.id
+    INNER JOIN quizzes AS q 
+    ON qq.quiz_id = q.id
     `;
         if (topic) {
-            query += ` WHERE t.name ILIKE '${topic}';`;
+            query += ` WHERE q.name ILIKE '${topic}';`;
         }
         console.log(query);
         const result = await database_1.default.query(query);
