@@ -7,6 +7,9 @@ import routes from './routes';
 dotenv.config();
 
 const app: Application = express();
+
+app.use(express.json());
+
 const PORT = process.env.PORT || 3001;
 
 // add middleware
