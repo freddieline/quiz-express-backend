@@ -3,6 +3,8 @@ import express, { Application, Request, Response, NextFunction } from 'express';
 import dotenv from 'dotenv';
 import corsMiddleware from './middleware/corsMiddleware';
 import routes from './routes';
+import { body } from 'express-validator';
+import quizQuestionsController from './controllers/quizQuestionsController';
 
 dotenv.config();
 

@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
-import db from '../database'
+import db from '../database';
+import { validationResult } from 'express-validator';
 
 interface QueryParams {
   topic?: string;
@@ -7,7 +8,7 @@ interface QueryParams {
 
 const getAllQuizQuestions = async (req: Request, res: Response): Promise<Response> => {
 
-  try{
+  try {
     const { topic }: QueryParams = req.query;
     let query = `
       SELECT qq.question, qq.answer_1, qq.answer_2, qq.answer_3, qq.answer_4, qq.correct_answer, q.name AS quiz_name, qq.additional_info 
@@ -32,6 +33,12 @@ const getAllQuizQuestions = async (req: Request, res: Response): Promise<Respons
 const postFeedback = async (req:Request, res:Response): Promise<Response> => {
   try {
     const { quizName, feedback } = req.body;
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      // Return a 400 response with validation errors
+      return res.status(400).json({ errors: errors.array() });
+    }
 
     const quizIDQuery = `SELECT id FROM quizzes WHERE name = '${quizName}';`;
     const result = await db.query(quizIDQuery);
@@ -50,7 +57,6 @@ const postFeedback = async (req:Request, res:Response): Promise<Response> => {
     const err = error as Error;
     return res.status(500).json({message: err.message});
   }
-
 }
 
 export default { getAllQuizQuestions, postFeedback };
