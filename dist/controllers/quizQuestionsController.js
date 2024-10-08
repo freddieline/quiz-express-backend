@@ -34,10 +34,10 @@ const postFeedback = async (req, res) => {
         }
         const quizIDQuery = `SELECT id FROM quizzes WHERE name = '${quizName}';`;
         const result = await database_1.default.query(quizIDQuery);
-        const quizId = result.rows[0].id;
-        if (!quizId) {
+        if (!result.rows[0]) {
             throw new Error("No quiz ID for " + quizName);
         }
+        const quizId = result.rows[0].id;
         let query = `INSERT INTO feedback (feedback, quiz_id, date_time) VALUES ( '${feedback}', ${quizId}, NOW());`;
         const result2 = await database_1.default.query(query);
         return res.status(201).json({ message: "ok" });

@@ -42,11 +42,12 @@ const postFeedback = async (req:Request, res:Response): Promise<Response> => {
 
     const quizIDQuery = `SELECT id FROM quizzes WHERE name = '${quizName}';`;
     const result = await db.query(quizIDQuery);
-    const quizId = result.rows[0].id;
 
-    if(!quizId){
-      throw new Error("No quiz ID for "+ quizName)
+    if(!result.rows[0]){
+      throw new Error("No quiz ID for "+ quizName);
     }
+
+    const quizId = result.rows[0].id;
 
     let query = `INSERT INTO feedback (feedback, quiz_id, date_time) VALUES ( '${feedback}', ${quizId}, NOW());`;
 
