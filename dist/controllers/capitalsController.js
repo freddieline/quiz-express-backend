@@ -11,10 +11,14 @@ const getAllCapitals = async (req, res) => {
     SELECT 
       capitals.name as capital, 
       capitals.country as country, 
-      continents.name as continent
+      continents.name as continent,
+      quizzes.name as quizName
     FROM capitals 
     INNER JOIN continents 
-    ON capitals.continent_id = continents.id`;
+    ON capitals.continent_id = continents.id
+    INNER JOIN quizzes
+    ON capitals.quiz_id = quizzes.id
+    `;
         if (continent) {
             console.log(continent);
             query += ` WHERE continents.name ILIKE '${continent}'`;
