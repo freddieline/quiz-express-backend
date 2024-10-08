@@ -11,7 +11,7 @@ const getAllQuizQuestions = async (req: Request, res: Response): Promise<Respons
   try {
     const { topic }: QueryParams = req.query;
     let query = `
-      SELECT qq.question, qq.answer_1, qq.answer_2, qq.answer_3, qq.answer_4, qq.correct_answer, q.name AS quiz_name, qq.additional_info 
+      SELECT qq.id, qq.question, qq.answer_1, qq.answer_2, qq.answer_3, qq.answer_4, qq.correct_answer, q.name as quiz_name, qq.additional_info 
       FROM quiz_questions AS qq 
       INNER JOIN quizzes AS q 
       ON qq.quiz_id = q.id`;
@@ -27,12 +27,11 @@ const getAllQuizQuestions = async (req: Request, res: Response): Promise<Respons
     const err = error as Error;
     return res.status(500).json({error: err.message});
   }
-
 }
 
-const postFeedback = async (req:Request, res:Response): Promise<Response> => {
+const patchQuizQuestion = async (req: Request, res: Response): Promise<Response> => {
+  console.log("yes");
   try {
-    const { quizName, feedback } = req.body;
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
@@ -40,24 +39,28 @@ const postFeedback = async (req:Request, res:Response): Promise<Response> => {
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const quizIDQuery = `SELECT id FROM quizzes WHERE name = '${quizName}';`;
-    const result = await db.query(quizIDQuery);
+    const { id, question = '', answer1 = '', answer2 = '', answer3 = '', answer4 = '', correctAnswer = null, additionalInfo = '' } = req.body;
 
-    if(!result.rows[0]){
-      throw new Error("No quiz ID for "+ quizName);
-    }
+    const query = `UPDATE quiz_questions
+                    SET
+                        question = COALESCE(NULLIF('${question}', ''), question),
+                        answer_1 = COALESCE(NULLIF('${answer1}', ''), answer_1),
+                        answer_2 = COALESCE(NULLIF('${answer2}', ''), answer_2),
+                        answer_3 = COALESCE(NULLIF('${answer3}', ''), answer_3),
+                        answer_4 = COALESCE(NULLIF('${answer4}', ''), answer_4),
+                        correct_answer = COALESCE(NULLIF(${correctAnswer}::INTEGER, NULL), correct_answer),
+                        additional_info = COALESCE(NULLIF('${additionalInfo}', ''), additional_info)
+                    WHERE id = ${id};`;
+    console.log(query);
 
-    const quizId = result.rows[0].id;
-
-    let query = `INSERT INTO feedback (feedback, quiz_id, date_time) VALUES ( '${feedback}', ${quizId}, NOW());`;
-
-    const result2 = await db.query(query);
-
+    await db.query(query);
     return res.status(201).json({message: "ok"});
   } catch (error){
     const err = error as Error;
     return res.status(500).json({message: err.message});
   }
+
 }
 
-export default { getAllQuizQuestions, postFeedback };
+
+export default { getAllQuizQuestions, patchQuizQuestion };
