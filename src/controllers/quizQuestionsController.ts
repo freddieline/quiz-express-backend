@@ -66,7 +66,7 @@ const patchQuizQuestion = async (req: Request, res: Response): Promise<Response>
     console.log(query);
 
     await db.query(query);
-    return res.status(201).json({message: "ok"});
+    return res.status(201);
   } catch (error){
     const err = error as Error;
     return res.status(500).json({message: err.message});

@@ -30,35 +30,14 @@ const express_1 = __importDefault(require("express"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const corsMiddleware_1 = __importDefault(require("./middleware/corsMiddleware"));
 const routes_1 = __importDefault(require("./routes"));
-const swagger_jsdoc_1 = __importDefault(require("swagger-jsdoc"));
-const swagger_ui_express_1 = __importDefault(require("swagger-ui-express"));
 const OpenApiValidator = __importStar(require("express-openapi-validator"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
-// Swagger options
-const swaggerOptions = {
-    definition: {
-        openapi: '3.0.0',
-        info: {
-            title: 'Quiz API',
-            version: '1.0.0',
-            description: 'API for Quiz Questions, Capitals, and Feedback',
-        },
-        servers: [
-            {
-                url: 'http://localhost:3001',
-            },
-        ],
-    },
-    apis: ['./api/**/*.js'], // Path to the API docs
-};
-const swaggerDocs = (0, swagger_jsdoc_1.default)(swaggerOptions);
-app.use('/api-docs', swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(swaggerDocs));
 app.use(OpenApiValidator.middleware({
-    apiSpec: './open-api-spec.json',
+    apiSpec: './openapi.json',
     validateRequests: true, // (default)
-    validateResponses: false, // (default)
+    validateResponses: true, // false by default
 }));
 const PORT = process.env.PORT || 3001;
 // add middleware
@@ -66,10 +45,10 @@ app.use(corsMiddleware_1.default);
 // Routes
 app.use('/api', routes_1.default);
 // Error handling middleware
-app.use((err, req, res, next) => {
+app.use(((err, req, res, next) => {
     console.error(err.stack);
     res.status(500).send({ message: 'Something broke!', error: err.message });
-});
+}));
 app.listen(PORT, () => {
     console.log("Server is running");
 });

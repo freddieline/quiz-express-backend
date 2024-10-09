@@ -48,7 +48,7 @@ const patchQuizQuestion = async (req, res) => {
                     WHERE id = ${id};`;
         console.log(query);
         await database_1.default.query(query);
-        return res.status(201).json({ message: "ok" });
+        return res.status(201);
     }
     catch (error) {
         const err = error;

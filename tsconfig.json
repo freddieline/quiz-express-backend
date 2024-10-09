@@ -10,6 +10,12 @@
     "forceConsistentCasingInFileNames": true,     // Enforce case-sensitive imports
     "resolveJsonModule": true
   },
+  "copyFiles": [
+    {
+      "from": "src/openapi.json",
+      "to": "dist/openapi.json"
+    }
+  ],
   "include": ["src/**/*"],                            // Include all files from the src folder
   "exclude": ["node_modules", "dist"]            // Exclude node_modules and dist
 }

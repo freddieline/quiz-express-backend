@@ -15,7 +15,7 @@ const postFeedback = async (req, res) => {
         const quizId = result.rows[0].id;
         let query = `INSERT INTO feedback (feedback, quiz_id, date_time) VALUES ( '${feedback}', ${quizId}, NOW());`;
         await database_1.default.query(query);
-        return res.status(201).json({ message: "ok" });
+        return res.status(201);
     }
     catch (error) {
         const err = error;
