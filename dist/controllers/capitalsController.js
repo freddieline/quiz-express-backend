@@ -4,21 +4,22 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const database_1 = __importDefault(require("../database"));
+const snakeToCamel_1 = require("../lib/snakeToCamel");
 const getAllCapitals = async (req, res) => {
     try {
         const { continent } = req.query;
         let query = `
-    SELECT 
-      capitals.name as capital, 
-      capitals.country as country, 
-      continents.name as continent,
-      quizzes.name as quizName
-    FROM capitals 
-    INNER JOIN continents 
-    ON capitals.continent_id = continents.id
-    INNER JOIN quizzes
-    ON capitals.quiz_id = quizzes.id
-    `;
+          SELECT 
+            capitals.name as capital, 
+            capitals.country as country, 
+            continents.name as continent,
+            quizzes.name as quiz_name
+          FROM capitals 
+          INNER JOIN continents 
+          ON capitals.continent_id = continents.id
+          INNER JOIN quizzes
+          ON capitals.quiz_id = quizzes.id
+          `;
         if (continent) {
             console.log(continent);
             query += ` WHERE continents.name ILIKE '${continent}'`;
@@ -26,7 +27,12 @@ const getAllCapitals = async (req, res) => {
         query += ';';
         console.log(query);
         let result = await database_1.default.query(query);
-        return res.status(200).json({ data: result.rows });
+        if (result.rows) {
+            const d = (0, snakeToCamel_1.transformKeys)(result.rows);
+            console.log(d);
+            return res.status(200).json({ data: d });
+        }
+        return res.status(500).json({ data: "No data!" });
     }
     catch (error) {
         console.log(error);

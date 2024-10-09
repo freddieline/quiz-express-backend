@@ -7,17 +7,61 @@ const express_1 = require("express");
 const quizQuestionsController_1 = __importDefault(require("../controllers/quizQuestionsController"));
 const capitalsController_1 = __importDefault(require("../controllers/capitalsController"));
 const feedbackController_1 = __importDefault(require("../controllers/feedbackController"));
-const express_validator_1 = require("express-validator");
 const router = (0, express_1.Router)();
 router.get('/capitals', capitalsController_1.default.getAllCapitals);
 router.get('/quiz-questions', quizQuestionsController_1.default.getAllQuizQuestions);
-const validateQuizQuestion = [
-    (0, express_validator_1.body)('id').notEmpty().withMessage('Quiz question id is required'),
-];
-router.patch('/quiz-question', validateQuizQuestion, quizQuestionsController_1.default.patchQuizQuestion);
-const validateFeedback = [
-    (0, express_validator_1.body)('quizName').notEmpty().withMessage('Quiz name is required'),
-    (0, express_validator_1.body)('feedback').notEmpty().withMessage('Feedback is required'),
-];
-router.post('/feedback', validateFeedback, feedbackController_1.default.postFeedback);
+/**
+ * @swagger
+ * /api/quiz-question:
+ *   post:
+ *     summary: Submit feedback
+ *     description: Submit feedback from a user.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               feedback:
+ *                 type: string
+ *                 example: "Great quiz!"
+ *               quizName:
+ *                 type: string
+ *                 example: "Geography Quiz"
+ *             required:
+ *               - feedback
+ *               - quizName
+ *     responses:
+ *       201:
+ *         description: Feedback successfully submitted
+ */
+router.patch('/quiz-question', quizQuestionsController_1.default.patchQuizQuestion);
+/**
+ * @swagger
+ * /api/feedback:
+ *   post:
+ *     summary: Submit feedback
+ *     description: Submit feedback from a user.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               feedback:
+ *                 type: string
+ *                 example: "Great quiz!"
+ *               quizName:
+ *                 type: string
+ *                 example: "Geography Quiz"
+ *             required:
+ *               - feedback
+ *               - quizName
+ *     responses:
+ *       201:
+ *         description: Feedback successfully submitted
+ */
+router.post('/feedback', feedbackController_1.default.postFeedback);
 exports.default = router;

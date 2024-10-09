@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const database_1 = __importDefault(require("../database"));
 const express_validator_1 = require("express-validator");
+const snakeToCamel_1 = require("../lib/snakeToCamel");
 const getAllQuizQuestions = async (req, res) => {
     try {
         const { topic } = req.query;
@@ -17,7 +18,10 @@ const getAllQuizQuestions = async (req, res) => {
             query += ` WHERE q.name ILIKE '${topic}';`;
         }
         const result = await database_1.default.query(query);
-        return res.status(200).json({ data: result.rows });
+        if (result.rows) {
+            return res.status(200).json({ data: (0, snakeToCamel_1.transformKeys)(result.rows) });
+        }
+        return res.status(500).json({ data: "No data!" });
     }
     catch (error) {
         const err = error;
@@ -25,7 +29,6 @@ const getAllQuizQuestions = async (req, res) => {
     }
 };
 const patchQuizQuestion = async (req, res) => {
-    console.log("yes");
     try {
         const errors = (0, express_validator_1.validationResult)(req);
         if (!errors.isEmpty()) {

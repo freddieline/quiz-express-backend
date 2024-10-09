@@ -9,17 +9,60 @@ const router = Router();
 router.get('/capitals', capitalsController.getAllCapitals);
 router.get('/quiz-questions', quizQuestionsController.getAllQuizQuestions);
 
-const validateQuizQuestion = [
-  body('id').notEmpty().withMessage('Quiz question id is required'),
-];
+/**
+ * @swagger
+ * /api/quiz-question:
+ *   post:
+ *     summary: Submit feedback
+ *     description: Submit feedback from a user.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               feedback:
+ *                 type: string
+ *                 example: "Great quiz!"
+ *               quizName:
+ *                 type: string
+ *                 example: "Geography Quiz"
+ *             required:
+ *               - feedback
+ *               - quizName
+ *     responses:
+ *       201:
+ *         description: Feedback successfully submitted
+ */
+router.patch('/quiz-question', quizQuestionsController.patchQuizQuestion);
 
-router.patch('/quiz-question', validateQuizQuestion, quizQuestionsController.patchQuizQuestion);
-
-const validateFeedback = [
-  body('quizName').notEmpty().withMessage('Quiz name is required'),
-  body('feedback').notEmpty().withMessage('Feedback is required'),
-];
-
-router.post('/feedback', validateFeedback, feedbackController.postFeedback);
+/**
+ * @swagger
+ * /api/feedback:
+ *   post:
+ *     summary: Submit feedback
+ *     description: Submit feedback from a user.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               feedback:
+ *                 type: string
+ *                 example: "Great quiz!"
+ *               quizName:
+ *                 type: string
+ *                 example: "Geography Quiz"
+ *             required:
+ *               - feedback
+ *               - quizName
+ *     responses:
+ *       201:
+ *         description: Feedback successfully submitted
+ */
+router.post('/feedback', feedbackController.postFeedback);
 
 export default router;

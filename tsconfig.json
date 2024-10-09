@@ -7,7 +7,8 @@
     "strict": true,                              // Enable strict type checking
     "esModuleInterop": true,                     // Enables ES6 module import/export interoperability
     "skipLibCheck": true,                        // Skip type checking of declaration files
-    "forceConsistentCasingInFileNames": true     // Enforce case-sensitive imports
+    "forceConsistentCasingInFileNames": true,     // Enforce case-sensitive imports
+    "resolveJsonModule": true
   },
   "include": ["src/**/*"],                            // Include all files from the src folder
   "exclude": ["node_modules", "dist"]            // Exclude node_modules and dist

@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import db from '../database';
 import { validationResult } from 'express-validator';
+import { transformKeys } from '../lib/snakeToCamel';
 
 interface QueryParams {
   topic?: string;
@@ -22,7 +23,12 @@ const getAllQuizQuestions = async (req: Request, res: Response): Promise<Respons
 
     const result = await db.query(query);
 
-    return res.status(200).json({data: result.rows});
+    if(result.rows){
+      return res.status(200).json({data: transformKeys(result.rows)})
+    }
+
+    return res.status(500).json({data: "No data!"})
+
   } catch (error){
     const err = error as Error;
     return res.status(500).json({error: err.message});
@@ -30,16 +36,22 @@ const getAllQuizQuestions = async (req: Request, res: Response): Promise<Respons
 }
 
 const patchQuizQuestion = async (req: Request, res: Response): Promise<Response> => {
-  console.log("yes");
   try {
     const errors = validationResult(req);
-
     if (!errors.isEmpty()) {
       // Return a 400 response with validation errors
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const { id, question = '', answer1 = '', answer2 = '', answer3 = '', answer4 = '', correctAnswer = null, additionalInfo = '' } = req.body;
+    const { 
+      id, 
+      question = '', 
+      answer1 = '', 
+      answer2 = '', 
+      answer3 = '', 
+      answer4 = '', 
+      correctAnswer = null, 
+      additionalInfo = '' } = req.body;
 
     const query = `UPDATE quiz_questions
                     SET
