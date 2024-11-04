@@ -34,9 +34,7 @@ const getAllCapitals = async (req: Request, res: Response): Promise<Response> =>
     console.log(query);
     let result = await db.query(query);
     if(result.rows){
-      const d = transformKeys(result.rows);
-      console.log(d);
-      return res.status(200).json({data: d})
+      return res.status(200).json({data: transformKeys(result.rows)})
     }
 
     return res.status(500).json({data: "No data!"})

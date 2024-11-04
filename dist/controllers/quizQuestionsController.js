@@ -7,6 +7,7 @@ const database_1 = __importDefault(require("../database"));
 const express_validator_1 = require("express-validator");
 const snakeToCamel_1 = require("../lib/snakeToCamel");
 const getAllQuizQuestions = async (req, res) => {
+    console.log(req.query);
     try {
         const { topic } = req.query;
         let query = `
@@ -14,12 +15,13 @@ const getAllQuizQuestions = async (req, res) => {
       FROM quiz_questions AS qq 
       INNER JOIN quizzes AS q 
       ON qq.quiz_id = q.id`;
+        console.log(topic);
         if (topic) {
             query += ` WHERE q.name ILIKE '${topic}';`;
         }
         const result = await database_1.default.query(query);
         if (result.rows) {
-            return res.status(200).json({ data: (0, snakeToCamel_1.transformKeys)(result.rows) });
+            return res.status(200).json((0, snakeToCamel_1.transformKeys)(result.rows));
         }
         return res.status(500).json({ data: "No data!" });
     }

@@ -28,9 +28,7 @@ const getAllCapitals = async (req, res) => {
         console.log(query);
         let result = await database_1.default.query(query);
         if (result.rows) {
-            const d = (0, snakeToCamel_1.transformKeys)(result.rows);
-            console.log(d);
-            return res.status(200).json({ data: d });
+            return res.status(200).json({ data: (0, snakeToCamel_1.transformKeys)(result.rows) });
         }
         return res.status(500).json({ data: "No data!" });
     }

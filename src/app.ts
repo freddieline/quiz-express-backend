@@ -5,21 +5,19 @@ import corsMiddleware from './middleware/corsMiddleware';
 import routes from './routes';
 import * as OpenApiValidator from 'express-openapi-validator';
 
-
 dotenv.config();
 
 const app: Application = express();
 
 app.use(express.json());
 
-
-app.use(
-  OpenApiValidator.middleware({
-    apiSpec: './openapi.json',
-    validateRequests: true, // (default)
-    validateResponses: true, // false by default
-  }),
-);
+// app.use(
+//   OpenApiValidator.middleware({
+//     apiSpec: './openapi.json',
+//     validateRequests: true, // (default)
+//     validateResponses: true, // false by default
+//   }),
+// );
 
 const PORT = process.env.PORT || 3001;
 

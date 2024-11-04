@@ -8,7 +8,6 @@ interface QueryParams {
 }
 
 const getAllQuizQuestions = async (req: Request, res: Response): Promise<Response> => {
-
   try {
     const { topic }: QueryParams = req.query;
     let query = `
@@ -24,7 +23,7 @@ const getAllQuizQuestions = async (req: Request, res: Response): Promise<Respons
     const result = await db.query(query);
 
     if(result.rows){
-      return res.status(200).json({data: transformKeys(result.rows)})
+      return res.status(200).json( transformKeys(result.rows))
     }
 
     return res.status(500).json({data: "No data!"})
