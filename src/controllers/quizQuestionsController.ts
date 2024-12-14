@@ -70,8 +70,6 @@ const patchQuizQuestion = async (req: Request, res: Response): Promise<Response>
     const err = error as Error;
     return res.status(500).json({message: err.message});
   }
-
 }
-
 
 export default { getAllQuizQuestions, patchQuizQuestion };
