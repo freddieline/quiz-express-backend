@@ -1,15 +1,14 @@
-import { Client } from 'pg';
+import { Client } from "pg";
 
-import dotenv from 'dotenv';
+import dotenv from "dotenv";
 
 dotenv.config();
-
 
 const db = new Client({
   connectionString: process.env.DATABASE_URL,
   ssl: {
-    rejectUnauthorized: false
-  }
+    rejectUnauthorized: false,
+  },
 });
 
 db.connect();

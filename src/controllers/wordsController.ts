@@ -1,27 +1,32 @@
 import { Request, Response } from 'express';
 import db from '../database';
-import { transformKeys } from '../lib/snakeToCamel';
-
-interface QueryParams {
-  word_length?: string;
-}
+import sql from 'sql-template-strings';
 
 const getWords = async (req: Request, res: Response): Promise<Response> => {
   try {
-    const { word_length }: QueryParams = req.query;
-    let query = `
-      SELECT word
-      FROM words`;
-
-    if (word_length){
-      query += ` WHERE word_length = '${word_length}';`
-    }
+    let query = sql`
+        WITH random_parent_word AS (
+        SELECT parent_word 
+        FROM derived_words 
+        ORDER BY RANDOM() 
+        LIMIT 1
+        )
+        SELECT 
+            w.id AS parent_word_id,
+            w.word AS parent_word,
+            w.hint, 
+            w.main_letter,
+            ARRAY_AGG(dw.word) AS derived_words
+        FROM words w
+        JOIN derived_words dw ON dw.parent_word = w.id
+        WHERE w.id = (SELECT parent_word FROM random_parent_word)
+        GROUP BY w.id, w.word, w.hint, w.main_letter;`;
 
     const result = await db.query(query);
 
+    console.log(result.rows);
     if(result.rows){
-      const words = result.rows.map((item) => item.word)
-      return res.status(200).json(transformKeys(words))
+      res.status(200).json(result.rows);
     }
 
     return res.status(500).json({data: "No data!"})
