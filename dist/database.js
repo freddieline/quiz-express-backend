@@ -9,8 +9,8 @@ dotenv_1.default.config();
 const db = new pg_1.Client({
     connectionString: process.env.DATABASE_URL,
     ssl: {
-        rejectUnauthorized: false
-    }
+        rejectUnauthorized: false,
+    },
 });
 db.connect();
 exports.default = db;

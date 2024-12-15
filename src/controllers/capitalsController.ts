@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import db from '../database';
 import { transformKeys } from '../lib/snakeToCamel';
-
+import sql from 'sql-template-strings';
 
 interface QueryParams {
   continent?: string;
@@ -12,7 +12,7 @@ const getAllCapitals = async (req: Request, res: Response): Promise<Response> =>
 
     const { continent }: QueryParams = req.query;
 
-    let query = `
+    let query = sql`
           SELECT 
             capitals.name as capital, 
             capitals.country as country, 
@@ -22,16 +22,23 @@ const getAllCapitals = async (req: Request, res: Response): Promise<Response> =>
           INNER JOIN continents 
           ON capitals.continent_id = continents.id
           INNER JOIN quizzes
-          ON capitals.quiz_id = quizzes.id
+          ON capitals.quiz_id = quizzes.id;
           `;
 
     if (continent) {
       console.log(continent)
-      query += ` WHERE continents.name ILIKE '${continent}'`
+      query = sql`SELECT 
+            capitals.name as capital, 
+            capitals.country as country, 
+            continents.name as continent,
+            quizzes.name as quiz_name
+          FROM capitals 
+          INNER JOIN continents 
+          ON capitals.continent_id = continents.id
+          INNER JOIN quizzes
+          ON capitals.quiz_id = quizzes.id WHERE continents.name ILIKE '${continent}';`
     }
 
-    query += ';'
-    console.log(query);
     let result = await db.query(query);
     if(result.rows){
       return res.status(200).json({data: transformKeys(result.rows)})

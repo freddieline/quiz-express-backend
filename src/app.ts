@@ -1,9 +1,8 @@
-
-import express, { Application, Request, Response, NextFunction } from 'express';
-import dotenv from 'dotenv';
-import corsMiddleware from './middleware/corsMiddleware';
-import routes from './routes';
-import * as OpenApiValidator from 'express-openapi-validator';
+import express, { Application, Request, Response, NextFunction } from "express";
+import dotenv from "dotenv";
+import corsMiddleware from "./middleware/corsMiddleware";
+import routes from "./routes";
+import * as OpenApiValidator from "express-openapi-validator";
 
 dotenv.config();
 
@@ -25,15 +24,14 @@ const PORT = process.env.PORT || 3001;
 app.use(corsMiddleware);
 
 // Routes
-app.use('/api', routes);
+app.use("/api", routes);
 
 // Error handling middleware
 app.use(((err: Error, req: Request, res: Response, next: NextFunction) => {
   console.error(err.stack);
-  res.status(500).send({ message: 'Something broke!', error: err.message });
+  res.status(500).send({ message: "Something broke!", error: err.message });
 }) as express.ErrorRequestHandler);
 
-
 app.listen(PORT, () => {
-  console.log("Server is running")
+  console.log("Server is running");
 });
