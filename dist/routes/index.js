@@ -9,8 +9,8 @@ const capitalsController_1 = __importDefault(require("../controllers/capitalsCon
 const feedbackController_1 = __importDefault(require("../controllers/feedbackController"));
 const wordsController_1 = __importDefault(require("../controllers/wordsController"));
 const router = (0, express_1.Router)();
-router.get('/capitals', capitalsController_1.default.getAllCapitals);
-router.get('/quiz-questions', quizQuestionsController_1.default.getAllQuizQuestions);
-router.post('/feedback', feedbackController_1.default.postFeedback);
-router.get('/words', wordsController_1.default.getWords);
+router.get("/capitals", capitalsController_1.default.getAllCapitals);
+router.get("/quiz-questions", quizQuestionsController_1.default.getAllQuizQuestions);
+router.post("/feedback", feedbackController_1.default.postFeedback);
+router.get("/words", wordsController_1.default.getWords);
 exports.default = router;

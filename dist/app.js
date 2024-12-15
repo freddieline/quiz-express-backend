@@ -21,11 +21,11 @@ const PORT = process.env.PORT || 3001;
 // add middleware
 app.use(corsMiddleware_1.default);
 // Routes
-app.use('/api', routes_1.default);
+app.use("/api", routes_1.default);
 // Error handling middleware
 app.use(((err, req, res, next) => {
     console.error(err.stack);
-    res.status(500).send({ message: 'Something broke!', error: err.message });
+    res.status(500).send({ message: "Something broke!", error: err.message });
 }));
 app.listen(PORT, () => {
     console.log("Server is running");

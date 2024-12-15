@@ -6,16 +6,22 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const database_1 = __importDefault(require("../database"));
 const express_validator_1 = require("express-validator");
 const snakeToCamel_1 = require("../lib/snakeToCamel");
+const sql_template_strings_1 = __importDefault(require("sql-template-strings"));
 const getAllQuizQuestions = async (req, res) => {
     try {
         const { topic } = req.query;
-        let query = `
+        let query = (0, sql_template_strings_1.default) `
       SELECT qq.id, qq.question, qq.answer_1, qq.answer_2, qq.answer_3, qq.answer_4, qq.correct_answer, q.name as quiz_name, qq.additional_info 
       FROM quiz_questions AS qq 
       INNER JOIN quizzes AS q 
       ON qq.quiz_id = q.id`;
         if (topic) {
-            query += ` WHERE q.name ILIKE '${topic}';`;
+            query = (0, sql_template_strings_1.default) `
+        SELECT qq.id, qq.question, qq.answer_1, qq.answer_2, qq.answer_3, qq.answer_4, qq.correct_answer, q.name as quiz_name, qq.additional_info 
+        FROM quiz_questions AS qq 
+        INNER JOIN quizzes AS q 
+        ON qq.quiz_id = q.id 
+        WHERE q.name ILIKE '${topic}';`;
         }
         const result = await database_1.default.query(query);
         if (result.rows) {
@@ -35,8 +41,8 @@ const patchQuizQuestion = async (req, res) => {
             // Return a 400 response with validation errors
             return res.status(400).json({ errors: errors.array() });
         }
-        const { id, question = '', answer1 = '', answer2 = '', answer3 = '', answer4 = '', correctAnswer = null, additionalInfo = '' } = req.body;
-        const query = `UPDATE quiz_questions
+        const { id, question = "", answer1 = "", answer2 = "", answer3 = "", answer4 = "", correctAnswer = null, additionalInfo = "", } = req.body;
+        const query = (0, sql_template_strings_1.default) `UPDATE quiz_questions
                     SET
                         question = COALESCE(NULLIF('${question}', ''), question),
                         answer_1 = COALESCE(NULLIF('${answer1}', ''), answer_1),
