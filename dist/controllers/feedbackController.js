@@ -4,16 +4,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const database_1 = __importDefault(require("../database"));
+const sql_template_strings_1 = __importDefault(require("sql-template-strings"));
 const postFeedback = async (req, res) => {
     try {
         const { quizName, feedback } = req.body;
-        const quizIDQuery = `SELECT id FROM quizzes WHERE name = '${quizName}';`;
+        const quizIDQuery = (0, sql_template_strings_1.default) `SELECT id FROM quizzes WHERE name = '${quizName}';`;
         const result = await database_1.default.query(quizIDQuery);
         if (!result.rows[0]) {
             throw new Error("No quiz ID for " + quizName);
         }
         const quizId = result.rows[0].id;
-        let query = `INSERT INTO feedback (feedback, quiz_id, date_time) VALUES ( '${feedback}', ${quizId}, NOW());`;
+        let query = (0, sql_template_strings_1.default) `INSERT INTO feedback (feedback, quiz_id, date_time) VALUES ( '${feedback}', ${quizId}, NOW());`;
         await database_1.default.query(query);
         return res.status(201);
     }

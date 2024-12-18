@@ -1,15 +1,17 @@
-import { Request, Response } from 'express';
-import db from '../database';
-import { transformKeys } from '../lib/snakeToCamel';
-import sql from 'sql-template-strings';
+import { Request, Response } from "express";
+import db from "../database";
+import { transformKeys } from "../lib/snakeToCamel";
+import sql from "sql-template-strings";
 
 interface QueryParams {
   continent?: string;
 }
 
-const getAllCapitals = async (req: Request, res: Response): Promise<Response> => {
+const getAllCapitals = async (
+  req: Request,
+  res: Response,
+): Promise<Response> => {
   try {
-
     const { continent }: QueryParams = req.query;
 
     let query = sql`
@@ -26,7 +28,7 @@ const getAllCapitals = async (req: Request, res: Response): Promise<Response> =>
           `;
 
     if (continent) {
-      console.log(continent)
+      console.log(continent);
       query = sql`SELECT 
             capitals.name as capital, 
             capitals.country as country, 
@@ -36,21 +38,19 @@ const getAllCapitals = async (req: Request, res: Response): Promise<Response> =>
           INNER JOIN continents 
           ON capitals.continent_id = continents.id
           INNER JOIN quizzes
-          ON capitals.quiz_id = quizzes.id WHERE continents.name ILIKE '${continent}';`
+          ON capitals.quiz_id = quizzes.id WHERE continents.name ILIKE '${continent}';`;
     }
 
     let result = await db.query(query);
-    if(result.rows){
-      return res.status(200).json({data: transformKeys(result.rows)})
+    if (result.rows) {
+      return res.status(200).json({ data: transformKeys(result.rows) });
     }
 
-    return res.status(500).json({data: "No data!"})
-  
-  }
-  catch (error ){
+    return res.status(500).json({ data: "No data!" });
+  } catch (error) {
     console.log(error);
-    return res.status(500).json({ error: "error.message"});
+    return res.status(500).json({ error: "error.message" });
   }
-}
+};
 
 export default { getAllCapitals };

@@ -1,11 +1,12 @@
 import { Request, Response } from "express";
 import db from "../database";
+import sql from "sql-template-strings";
 
 const postFeedback = async (req: Request, res: Response): Promise<Response> => {
   try {
     const { quizName, feedback } = req.body;
 
-    const quizIDQuery = `SELECT id FROM quizzes WHERE name = '${quizName}';`;
+    const quizIDQuery = sql`SELECT id FROM quizzes WHERE name = '${quizName}';`;
     const result = await db.query(quizIDQuery);
 
     if (!result.rows[0]) {
@@ -14,7 +15,7 @@ const postFeedback = async (req: Request, res: Response): Promise<Response> => {
 
     const quizId = result.rows[0].id;
 
-    let query = `INSERT INTO feedback (feedback, quiz_id, date_time) VALUES ( '${feedback}', ${quizId}, NOW());`;
+    let query = sql`INSERT INTO feedback (feedback, quiz_id, date_time) VALUES ( '${feedback}', ${quizId}, NOW());`;
 
     await db.query(query);
 
