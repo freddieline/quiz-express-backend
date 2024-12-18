@@ -1,19 +1,20 @@
 import { Request, Response } from "express";
 import db from "../database";
 import sql from "sql-template-strings";
+import { transformKeys } from "../lib/snakeToCamel";
 
 const getWords = async (req: Request, res: Response): Promise<Response> => {
   try {
     let query = sql`
         WITH random_parent_word AS (
-        SELECT parent_word 
+        SELECT parent_word as word
         FROM derived_words 
         ORDER BY RANDOM() 
         LIMIT 1
         )
         SELECT 
-            w.id AS parent_word_id,
-            w.word AS parent_word,
+            w.id,
+            w.word,
             w.hint, 
             w.main_letter,
             ARRAY_AGG(dw.word) AS derived_words
@@ -25,7 +26,7 @@ const getWords = async (req: Request, res: Response): Promise<Response> => {
     const result = await db.query(query);
 
     if (result.rows) {
-      return res.status(200).json(result.rows);
+      return res.status(200).json(transformKeys(result.rows));
     } else {
       return res.status(500).json({ data: "No data!" });
     }
