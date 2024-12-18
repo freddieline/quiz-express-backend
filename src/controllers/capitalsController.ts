@@ -13,6 +13,7 @@ const getAllCapitals = async (
 ): Promise<Response> => {
   try {
     const { continent }: QueryParams = req.query;
+    let result;
 
     let query = sql`
           SELECT 
@@ -28,7 +29,6 @@ const getAllCapitals = async (
           `;
 
     if (continent) {
-      console.log(continent);
       query = sql`SELECT 
             capitals.name as capital, 
             capitals.country as country, 
@@ -38,10 +38,13 @@ const getAllCapitals = async (
           INNER JOIN continents 
           ON capitals.continent_id = continents.id
           INNER JOIN quizzes
-          ON capitals.quiz_id = quizzes.id WHERE continents.name ILIKE '${continent}';`;
+          ON capitals.quiz_id = quizzes.id WHERE continents.name ILIKE $1;`;
+      const values = [continent];
+      result = await db.query(query, values);
+    } else {
+      result = await db.query(query);
     }
 
-    let result = await db.query(query);
     if (result.rows) {
       return res.status(200).json({ data: transformKeys(result.rows) });
     }
