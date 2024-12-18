@@ -25,11 +25,12 @@ const getWords = async (req, res) => {
         WHERE w.id = (SELECT parent_word FROM random_parent_word)
         GROUP BY w.id, w.word, w.hint, w.main_letter;`;
         const result = await database_1.default.query(query);
-        console.log(result.rows);
         if (result.rows) {
-            res.status(200).json(result.rows);
+            return res.status(200).json(result.rows);
         }
-        return res.status(500).json({ data: "No data!" });
+        else {
+            return res.status(500).json({ data: "No data!" });
+        }
     }
     catch (error) {
         const err = error;
