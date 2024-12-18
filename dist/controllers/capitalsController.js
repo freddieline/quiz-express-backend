@@ -21,8 +21,8 @@ const getAllCapitals = async (req, res) => {
           INNER JOIN quizzes
           ON capitals.quiz_id = quizzes.id;
           `;
+        let result;
         if (continent) {
-            console.log(continent);
             query = (0, sql_template_strings_1.default) `SELECT 
             capitals.name as capital, 
             capitals.country as country, 
@@ -32,9 +32,13 @@ const getAllCapitals = async (req, res) => {
           INNER JOIN continents 
           ON capitals.continent_id = continents.id
           INNER JOIN quizzes
-          ON capitals.quiz_id = quizzes.id WHERE continents.name ILIKE '${continent}';`;
+          ON capitals.quiz_id = quizzes.id WHERE continents.name ILIKE $1;`;
+            const values = [continent];
+            result = await database_1.default.query(query, values);
         }
-        let result = await database_1.default.query(query);
+        else {
+            result = await database_1.default.query(query);
+        }
         if (result.rows) {
             return res.status(200).json({ data: (0, snakeToCamel_1.transformKeys)(result.rows) });
         }
