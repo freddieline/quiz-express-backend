@@ -9,6 +9,7 @@ const sql_template_strings_1 = __importDefault(require("sql-template-strings"));
 const getAllCapitals = async (req, res) => {
     try {
         const { continent } = req.query;
+        let result;
         let query = (0, sql_template_strings_1.default) `
           SELECT 
             capitals.name as capital, 
@@ -21,7 +22,6 @@ const getAllCapitals = async (req, res) => {
           INNER JOIN quizzes
           ON capitals.quiz_id = quizzes.id;
           `;
-        let result;
         if (continent) {
             query = (0, sql_template_strings_1.default) `SELECT 
             capitals.name as capital, 
