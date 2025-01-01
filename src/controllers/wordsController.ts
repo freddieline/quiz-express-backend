@@ -9,11 +9,6 @@ const getWords = async (req: Request, res: Response): Promise<Response> => {
         WITH random_parent_word AS (
           SELECT w.id
           FROM words w
-          WHERE EXISTS (
-              SELECT 1
-              FROM derived_words dw
-              WHERE dw.parent_word = w.id
-          )
           ORDER BY RANDOM()
           LIMIT 1
         )
