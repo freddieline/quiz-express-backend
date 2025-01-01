@@ -16,10 +16,8 @@ const getWords = async (req: Request, res: Response): Promise<Response> => {
             w.id,
             LOWER(w.word) as word,
             w.hint,
-            LOWER(w.main_letter) as main_letter,
-            ARRAY_AGG(LOWER(dw.word)) AS derived_words
+            LOWER(w.main_letter) as main_letter
         FROM words w
-        JOIN derived_words dw ON dw.parent_word = w.id
         WHERE w.id = (SELECT id FROM random_parent_word)
         GROUP BY w.id, w.word, w.hint, w.main_letter;
 `;
