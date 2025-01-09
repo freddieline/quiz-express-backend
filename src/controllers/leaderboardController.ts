@@ -56,10 +56,12 @@ const postLeaderboardItem = async (
     `;
     const result = await db.query(query, [nameLowerCase, score, game]);
 
-    return res.status(201).json({
-      message: "Leaderboard item created successfully",
-      item: result.rows[0],
-    });
+      const query2 = sql`
+      SELECT * FROM leaderboard WHERE game = $1 ORDER BY score DESC;
+      `;
+      const result2 = await db.query(query2,[game]);
+
+      return res.status(200).json(result2.rows);
   } catch (e) {
     const err = e as Error;
     return res.status(500).json({ error: err.message });

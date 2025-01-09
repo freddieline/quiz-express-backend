@@ -36,10 +36,11 @@ const postLeaderboardItem = async (req, res) => {
     INSERT INTO leaderboard (name, score, game) VALUES ($1, $2, $3);
     `;
         const result = await database_1.default.query(query, [nameLowerCase, score, game]);
-        return res.status(201).json({
-            message: "Leaderboard item created successfully",
-            item: result.rows[0],
-        });
+        const query2 = (0, sql_template_strings_1.default) `
+      SELECT * FROM leaderboard WHERE game = $1 ORDER BY score DESC;
+      `;
+        const result2 = await database_1.default.query(query2, [game]);
+        return res.status(200).json(result2.rows);
     }
     catch (e) {
         const err = e;
