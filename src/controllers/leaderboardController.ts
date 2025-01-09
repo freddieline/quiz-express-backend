@@ -18,15 +18,15 @@ const getLeaderboard = async (
 ): Promise<Response> => {
   const { game }: QueryParams = req.query;
 
-  if(!game){
-    return res.status(400).json({error: "Game not provided"})
+  if (!game) {
+    return res.status(400).json({ error: "Game not provided" });
   }
 
   try {
     const query = sql`
     SELECT * FROM leaderboard WHERE game = $1 ORDER BY score DESC;
     `;
-    const result = await db.query(query,[game]);
+    const result = await db.query(query, [game]);
 
     return res.status(200).json(result.rows);
   } catch (error) {
@@ -54,14 +54,14 @@ const postLeaderboardItem = async (
     const query = sql`
     INSERT INTO leaderboard (name, score, game) VALUES ($1, $2, $3);
     `;
-    const result = await db.query(query, [nameLowerCase, score, game]);
+    await db.query(query, [nameLowerCase, score, game]);
 
-      const query2 = sql`
+    const query2 = sql`
       SELECT * FROM leaderboard WHERE game = $1 ORDER BY score DESC;
       `;
-      const result2 = await db.query(query2,[game]);
+    const result2 = await db.query(query2, [game]);
 
-      return res.status(200).json(result2.rows);
+    return res.status(200).json(result2.rows);
   } catch (e) {
     const err = e as Error;
     return res.status(500).json({ error: err.message });
